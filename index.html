@@ -3,580 +3,150 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DevHub - Herramientas Diarias de Informática</title>
+  <title>Mi Sitio Personal</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* Custom scrollbar */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #475569; }
-    .tab-active { background-color: #1e293b; border-color: #38bdf8; color: #38bdf8; }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    .cursor-blink {
+      animation: blink 1s infinite;
+    }
+    .secret-dot {
+      cursor: default;
+      transition: color 0.2s ease;
+      user-select: none;
+    }
+    .secret-dot:hover {
+      color: #94a3b8;
+    }
+    .glitch-flash {
+      animation: flashGlitch 0.4s ease-in-out;
+    }
+    @keyframes flashGlitch {
+      0% { filter: invert(0); }
+      50% { filter: invert(1); background: #00ff88; }
+      100% { filter: invert(0); }
+    }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans">
+<body class="bg-neutral-950 text-neutral-300 min-h-screen flex flex-col items-center justify-between p-6 font-mono select-none antialiased">
 
-  <!-- Header -->
-  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 text-xl font-mono">
-          <i class="fa-solid fa-terminal"></i>
-        </div>
-        <div>
-          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
-            DevHub <span class="text-xs bg-sky-500/20 text-sky-400 px-2 py-0.5 rounded border border-sky-500/30">v1.0</span>
-          </h1>
-          <p class="text-xs text-slate-400">Herramientas y utilidades esenciales para tu día a día en informática</p>
-        </div>
-      </div>
-      <div class="flex items-center gap-2">
-        <span class="text-xs text-slate-400 hidden sm:inline" id="clock">--:--:--</span>
-        <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span> Offline Ready
-        </span>
-      </div>
-    </div>
+  <header class="w-full max-w-xl flex justify-between items-center text-xs text-neutral-600 pt-4">
+    <span class="tracking-widest uppercase text-[10px]">SYS_STATUS: IDLE</span>
+    <span id="clickCounterNotice" class="text-[10px] text-neutral-700 transition-opacity opacity-0 font-mono"></span>
   </header>
 
-  <!-- Navigation Tabs -->
-  <nav class="bg-slate-900 border-b border-slate-800 sticky top-16 z-40">
-    <div class="max-w-7xl mx-auto px-4 flex gap-1 overflow-x-auto py-2">
-      <button onclick="switchTab('json')" id="tab-json" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2 whitespace-nowrap tab-active">
-        <i class="fa-solid fa-code"></i> JSON Formatter
-      </button>
-      <button onclick="switchTab('encoder')" id="tab-encoder" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-key"></i> Base64 / URL
-      </button>
-      <button onclick="switchTab('hash')" id="tab-hash" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-fingerprint"></i> Hashes & UUID
-      </button>
-      <button onclick="switchTab('chmod')" id="tab-chmod" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-shield-halved"></i> Chmod Linux
-      </button>
-      <button onclick="switchTab('network')" id="tab-network" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-network-wired"></i> Redes & Subnet
-      </button>
-      <button onclick="switchTab('cheatsheet')" id="tab-cheatsheet" class="tab-btn px-4 py-2 rounded-lg text-sm font-medium border border-transparent text-slate-400 hover:text-white hover:bg-slate-800 transition-all flex items-center gap-2 whitespace-nowrap">
-        <i class="fa-solid fa-book-bookmark"></i> Git & Bash Chuleta
-      </button>
+  <main class="w-full max-w-md text-center py-20 flex flex-col items-center">
+    <div class="w-12 h-12 rounded-2xl bg-neutral-900 border border-neutral-800 flex items-center justify-center text-neutral-400 mb-8 shadow-sm">
+      <svg class="w-5 h-5 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+      </svg>
     </div>
-  </nav>
 
-  <!-- Main Content Area -->
-  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
+    <h1 class="text-xl font-normal text-neutral-100 tracking-tight mb-2">
+      Workspace
+    </h1>
+    
+    <p class="text-neutral-500 text-sm leading-relaxed mb-6">
+      Espacio privado en preparación<span id="secretTrigger" class="secret-dot text-neutral-500">.</span>
+    </p>
 
-    <!-- TAB 1: JSON Formatter & Validator -->
-    <section id="panel-json" class="tool-panel">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
-            <span class="text-sm font-semibold text-slate-300">Entrada JSON sin formato</span>
-            <div class="flex gap-2">
-              <button onclick="loadSampleJson()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded transition">Ejemplo</button>
-              <button onclick="clearJson()" class="text-xs bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded transition">Limpiar</button>
-            </div>
-          </div>
-          <textarea id="jsonInput" placeholder="Pega tu JSON aquí..." class="w-full h-80 bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-sky-300 focus:outline-none focus:border-sky-500 resize-none"></textarea>
-          <div class="mt-4 flex gap-2">
-            <button onclick="formatJson()" class="flex-1 bg-sky-600 hover:bg-sky-500 text-white font-medium py-2 rounded-lg text-sm transition">
-              <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Formatear y Validar
-            </button>
-            <button onclick="minifyJson()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm transition">
-              Minificar
-            </button>
-          </div>
-        </div>
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neutral-900/60 border border-neutral-800/80 text-xs text-neutral-500">
+      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500/70"></span>
+      <span>v0.1.0</span>
+      <span class="text-neutral-700">|</span>
+      <span>2026</span>
+    </div>
 
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-col">
-          <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
-            <div class="flex items-center gap-2">
-              <span class="text-sm font-semibold text-slate-300">Resultado</span>
-              <span id="jsonStatus" class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400">En espera</span>
-            </div>
-            <button onclick="copyToClipboard('jsonOutput')" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-2.5 py-1 rounded transition">
-              <i class="fa-regular fa-copy mr-1"></i> Copiar
-            </button>
-          </div>
-          <textarea id="jsonOutput" readonly placeholder="El resultado formateado aparecerá aquí..." class="w-full h-80 bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-emerald-400 focus:outline-none resize-none"></textarea>
-          <div id="jsonMeta" class="mt-4 text-xs text-slate-500 font-mono flex justify-between">
-            <span>Bytes: 0</span>
-            <span>Claves: 0</span>
-          </div>
-        </div>
+    <!-- Hidden terminal prompt (shows when typing 'dev') -->
+    <div id="secretTerminal" class="hidden mt-8 w-full bg-black/90 border border-neutral-800 rounded-lg p-4 text-left font-mono text-xs shadow-2xl transition-all">
+      <div class="flex items-center justify-between pb-2 mb-2 border-b border-neutral-800 text-neutral-500 text-[10px]">
+        <span>DEVHUB_TERMINAL_AUTH</span>
+        <span class="text-emerald-400 font-bold">ACCESS GRANTED</span>
       </div>
-    </section>
-
-    <!-- TAB 2: Encoder / Decoder -->
-    <section id="panel-encoder" class="tool-panel hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-        <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
-          <i class="fa-solid fa-arrow-right-arrow-left text-sky-400"></i> Codificador / Decodificador Multi-formato
-        </h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label class="block text-xs font-medium text-slate-400 mb-2">Texto de entrada / origen</label>
-            <textarea id="encodeInput" rows="7" placeholder="Introduce el texto a transformar..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-200 focus:border-sky-500 focus:outline-none"></textarea>
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-3">
-              <button onclick="processTransform('b64-enc')" class="bg-slate-800 hover:bg-slate-700 py-1.5 text-xs rounded text-slate-200">Base64 Encode</button>
-              <button onclick="processTransform('b64-dec')" class="bg-slate-800 hover:bg-slate-700 py-1.5 text-xs rounded text-slate-200">Base64 Decode</button>
-              <button onclick="processTransform('url-enc')" class="bg-slate-800 hover:bg-slate-700 py-1.5 text-xs rounded text-slate-200">URL Encode</button>
-              <button onclick="processTransform('url-dec')" class="bg-slate-800 hover:bg-slate-700 py-1.5 text-xs rounded text-slate-200">URL Decode</button>
-            </div>
-          </div>
-          <div>
-            <div class="flex justify-between items-center mb-2">
-              <label class="text-xs font-medium text-slate-400">Salida transformada</label>
-              <button onclick="copyToClipboard('encodeOutput')" class="text-xs text-sky-400 hover:underline">Copiar</button>
-            </div>
-            <textarea id="encodeOutput" readonly rows="7" placeholder="Resultado..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-emerald-400 focus:outline-none"></textarea>
-            <div class="mt-3 flex gap-2">
-              <button onclick="swapEncoderTexts()" class="w-full bg-slate-800 hover:bg-slate-700 py-1.5 text-xs rounded text-slate-300">
-                <i class="fa-solid fa-arrows-up-down mr-1"></i> Usar salida como entrada
-              </button>
-            </div>
-          </div>
-        </div>
+      <p class="text-neutral-400 mb-1">> Verificando credenciales de desarrollador...</p>
+      <p class="text-emerald-400 mb-2">> [OK] Abriendo caja de herramientas...</p>
+      <div class="w-full bg-neutral-900 h-1.5 rounded-full overflow-hidden">
+        <div id="termProgress" class="bg-emerald-400 h-full w-0 transition-all duration-700"></div>
       </div>
-    </section>
-
-    <!-- TAB 3: Hash Generator & UUID -->
-    <section id="panel-hash" class="tool-panel hidden">
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-6">
-          <h2 class="text-base font-semibold text-white mb-2">Generador Criptográfico de Hashes</h2>
-          <p class="text-xs text-slate-400 mb-4">Calcula en tiempo real con la Web Crypto API del navegador.</p>
-          <input type="text" id="hashInput" oninput="generateHashes()" placeholder="Escribe cualquier palabra o contraseña..." class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-sm text-sky-400 focus:outline-none focus:border-sky-500 mb-6 font-mono">
-
-          <div class="space-y-4">
-            <div>
-              <div class="flex justify-between text-xs text-slate-400 mb-1">
-                <span>SHA-256</span>
-                <button onclick="copyRaw(document.getElementById('sha256').innerText)" class="text-sky-400 hover:underline">Copiar</button>
-              </div>
-              <div id="sha256" class="p-2.5 bg-slate-950 rounded border border-slate-800 font-mono text-xs text-slate-300 break-all select-all">e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855</div>
-            </div>
-            <div>
-              <div class="flex justify-between text-xs text-slate-400 mb-1">
-                <span>SHA-512</span>
-                <button onclick="copyRaw(document.getElementById('sha512').innerText)" class="text-sky-400 hover:underline">Copiar</button>
-              </div>
-              <div id="sha512" class="p-2.5 bg-slate-950 rounded border border-slate-800 font-mono text-xs text-slate-300 break-all select-all">-</div>
-            </div>
-            <div>
-              <div class="flex justify-between text-xs text-slate-400 mb-1">
-                <span>SHA-1</span>
-                <button onclick="copyRaw(document.getElementById('sha1').innerText)" class="text-sky-400 hover:underline">Copiar</button>
-              </div>
-              <div id="sha1" class="p-2.5 bg-slate-950 rounded border border-slate-800 font-mono text-xs text-slate-300 break-all select-all">-</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 flex flex-col justify-between">
-          <div>
-            <h2 class="text-base font-semibold text-white mb-2">Generador de UUID v4</h2>
-            <p class="text-xs text-slate-400 mb-4">Identificadores universales únicos según estándar RFC 4122.</p>
-            <div id="uuidOutput" class="p-3 bg-slate-950 rounded border border-slate-800 font-mono text-sm text-sky-400 text-center select-all mb-4">
-              Pulse generar
-            </div>
-            <button onclick="generateUUID()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-medium py-2 rounded-lg text-sm transition">
-              <i class="fa-solid fa-arrows-rotate mr-1"></i> Generar Nuevo UUID
-            </button>
-          </div>
-          <div class="mt-6 pt-6 border-t border-slate-800">
-            <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Timestamp Actual</h3>
-            <div id="unixTimestamp" class="text-xl font-mono text-emerald-400">1700000000</div>
-            <div class="text-[11px] text-slate-500 mt-1">Segundos Unix desde 01-01-1970</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: Linux Chmod Permissions -->
-    <section id="panel-chmod" class="tool-panel hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-        <h2 class="text-base font-semibold text-white mb-4">Calculadora de Permisos Linux (chmod)</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-          <!-- Owner -->
-          <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
-            <h3 class="text-sm font-semibold text-sky-400 mb-3 border-b border-slate-800 pb-2">Propietario (Owner)</h3>
-            <div class="space-y-2 text-sm">
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="u_r" checked onchange="calcChmod()" class="rounded border-slate-700 text-sky-500 focus:ring-0">
-                <span>Lectura (r - 4)</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="u_w" checked onchange="calcChmod()" class="rounded border-slate-700 text-sky-500 focus:ring-0">
-                <span>Escritura (w - 2)</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="u_x" checked onchange="calcChmod()" class="rounded border-slate-700 text-sky-500 focus:ring-0">
-                <span>Ejecución (x - 1)</span>
-              </label>
-            </div>
-          </div>
-          <!-- Group -->
-          <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
-            <h3 class="text-sm font-semibold text-sky-400 mb-3 border-b border-slate-800 pb-2">Grupo (Group)</h3>
-            <div class="space-y-2 text-sm">
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="g_r" checked onchange="calcChmod()" class="rounded border-slate-700 text-sky-500 focus:ring-0">
-                <span>Lectura (r - 4)</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="g_w" onchange="calcChmod()" class="rounded border-slate-700 text-sky-500 focus:ring-0">
-                <span>Escritura (w - 2)</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="g_x" checked onchange="calcChmod()" class="rounded border-slate-700 text-sky-500 focus:ring-0">
-                <span>Ejecución (x - 1)</span>
-              </label>
-            </div>
-          </div>
-          <!-- Others -->
-          <div class="bg-slate-950 p-4 rounded-lg border border-slate-800">
-            <h3 class="text-sm font-semibold text-sky-400 mb-3 border-b border-slate-800 pb-2">Otros (Others)</h3>
-            <div class="space-y-2 text-sm">
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="o_r" checked onchange="calcChmod()" class="rounded border-slate-700 text-sky-500 focus:ring-0">
-                <span>Lectura (r - 4)</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="o_w" onchange="calcChmod()" class="rounded border-slate-700 text-sky-500 focus:ring-0">
-                <span>Escritura (w - 2)</span>
-              </label>
-              <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" id="o_x" checked onchange="calcChmod()" class="rounded border-slate-700 text-sky-500 focus:ring-0">
-                <span>Ejecución (x - 1)</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center bg-slate-950 p-4 rounded-lg border border-slate-800">
-          <div>
-            <span class="text-xs text-slate-400 block mb-1">Comando resultante:</span>
-            <span id="chmodCmd" class="font-mono text-emerald-400 text-lg select-all">chmod 755 archivo.sh</span>
-          </div>
-          <div class="flex items-center justify-start md:justify-end gap-6 text-sm">
-            <div>Octal: <span id="chmodOctal" class="font-mono font-bold text-sky-400">755</span></div>
-            <div>Simbólico: <span id="chmodSymbolic" class="font-mono font-bold text-sky-400">rwxr-xr-x</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 5: Networking & Subnets -->
-    <section id="panel-network" class="tool-panel hidden">
-      <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
-        <h2 class="text-base font-semibold text-white mb-4">Calculadora Rápida IPv4 / CIDR</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div class="md:col-span-2">
-            <label class="block text-xs text-slate-400 mb-1">Dirección IP</label>
-            <input type="text" id="ipAddress" value="192.168.1.50" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 font-mono text-sm text-sky-300">
-          </div>
-          <div>
-            <label class="block text-xs text-slate-400 mb-1">Máscara CIDR</label>
-            <select id="cidrMask" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 font-mono text-sm text-sky-300">
-              <option value="24" selected>/24 - 255.255.255.0 (256 IPs)</option>
-              <option value="16">/16 - 255.255.0.0 (65,536 IPs)</option>
-              <option value="20">/20 - 255.255.240.0 (4,096 IPs)</option>
-              <option value="26">/26 - 255.255.255.192 (64 IPs)</option>
-              <option value="28">/28 - 255.255.255.240 (16 IPs)</option>
-              <option value="30">/30 - 255.255.255.252 (4 IPs)</option>
-            </select>
-          </div>
-        </div>
-        <button onclick="calculateSubnet()" class="bg-sky-600 hover:bg-sky-500 text-white text-sm font-medium px-4 py-2 rounded-lg transition mb-6">
-          Calcular Red
-        </button>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-            <span class="text-xs text-slate-500 block">ID de Red</span>
-            <span id="netId" class="font-mono text-sm text-slate-200">192.168.1.0</span>
-          </div>
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-            <span class="text-xs text-slate-500 block">Broadcast</span>
-            <span id="netBroadcast" class="font-mono text-sm text-slate-200">192.168.1.255</span>
-          </div>
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-            <span class="text-xs text-slate-500 block">Rango Hosts Útiles</span>
-            <span id="netRange" class="font-mono text-xs text-emerald-400">192.168.1.1 - 192.168.1.254</span>
-          </div>
-          <div class="bg-slate-950 p-3 rounded-lg border border-slate-800">
-            <span class="text-xs text-slate-500 block">Hosts Disponibles</span>
-            <span id="netHosts" class="font-mono text-sm text-sky-400">254</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 6: Cheat Sheet -->
-    <section id="panel-cheatsheet" class="tool-panel hidden">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Git Cheat Sheet -->
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-          <h2 class="text-sm font-bold text-sky-400 mb-3 flex items-center gap-2">
-            <i class="fa-brands fa-git-alt text-lg"></i> Comandos Esenciales de Git
-          </h2>
-          <div class="space-y-3 font-mono text-xs">
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Clonar repositorio existente</span>
-              <p class="text-emerald-400">git clone https://github.com/user/repo.git</p>
-            </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Subir cambios paso a paso</span>
-              <p class="text-emerald-400">git add .<br>git commit -m "Mensaje"<br>git push origin main</p>
-            </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Descargar cambios y sincronizar</span>
-              <p class="text-emerald-400">git pull origin main</p>
-            </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Guardar cambios sin commitear temporalmente</span>
-              <p class="text-emerald-400">git stash<br>git stash pop</p>
-            </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Deshacer último commit sin perder archivos</span>
-              <p class="text-emerald-400">git reset --soft HEAD~1</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Linux / Bash Cheat Sheet -->
-        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
-          <h2 class="text-sm font-bold text-amber-400 mb-3 flex items-center gap-2">
-            <i class="fa-brands fa-linux text-lg"></i> Comandos Diarios de Linux & Servidores
-          </h2>
-          <div class="space-y-3 font-mono text-xs">
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Ver puertos y servicios escuchando</span>
-              <p class="text-emerald-400">sudo ss -tulpn</p>
-            </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Ver uso de disco en formato legible</span>
-              <p class="text-emerald-400">df -h</p>
-            </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Buscar ficheros por nombre</span>
-              <p class="text-emerald-400">find . -name "*.log" -type f</p>
-            </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Monitorizar logs en tiempo real</span>
-              <p class="text-emerald-400">tail -f /var/log/syslog</p>
-            </div>
-            <div class="p-2 bg-slate-950 rounded border border-slate-800/80">
-              <span class="text-slate-400"># Comprimir y empaquetar una carpeta</span>
-              <p class="text-emerald-400">tar -czvf respaldo.tar.gz /carpeta</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
+    </div>
   </main>
 
-  <footer class="border-t border-slate-800 bg-slate-900/40 text-center py-4 text-xs text-slate-500">
-    DevHub — Tu caja de herramientas informáticas. Funciona 100% en local sin enviar datos a servidores externos.
+  <footer class="w-full max-w-xl flex justify-between items-center text-[11px] text-neutral-600 pb-4 border-t border-neutral-900/80 pt-4">
+    <span>© 2026</span>
+    <span class="text-neutral-600 flex items-center gap-1.5">
+      <span class="hidden sm:inline">Presiona</span> <kbd class="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800 text-neutral-400 text-[10px]">dev</kbd>
+    </span>
   </footer>
 
   <script>
-    // Tab switching logic
-    function switchTab(tabId) {
-      document.querySelectorAll('.tool-panel').forEach(p => p.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(b => {
-        b.classList.remove('tab-active');
-        b.classList.add('text-slate-400');
-      });
+    let dotClicks = 0;
+    let clickTimeout;
+    const secretDot = document.getElementById('secretTrigger');
+    const notice = document.getElementById('clickCounterNotice');
+    const terminal = document.getElementById('secretTerminal');
+    const progressBar = document.getElementById('termProgress');
 
-      const selectedPanel = document.getElementById('panel-' + tabId);
-      const selectedBtn = document.getElementById('tab-' + tabId);
-      if (selectedPanel && selectedBtn) {
-        selectedPanel.classList.remove('hidden');
-        selectedBtn.classList.add('tab-active');
-        selectedBtn.classList.remove('text-slate-400');
+    // Trigger 1: Triple click on the dot (.)
+    secretDot.addEventListener('click', (e) => {
+      e.preventDefault();
+      dotClicks++;
+
+      clearTimeout(clickTimeout);
+      clickTimeout = setTimeout(() => {
+        dotClicks = 0;
+        notice.classList.add('opacity-0');
+      }, 1200);
+
+      if (dotClicks === 1) {
+        notice.innerText = "Secuencia 1/3...";
+        notice.classList.remove('opacity-0');
+      } else if (dotClicks === 2) {
+        notice.innerText = "Secuencia 2/3...";
+        notice.classList.remove('opacity-0');
+      } else if (dotClicks >= 3) {
+        notice.innerText = "Desbloqueando...";
+        launchDevHub();
       }
-    }
+    });
 
-    // JSON Tool
-    function formatJson() {
-      const input = document.getElementById('jsonInput').value;
-      const status = document.getElementById('jsonStatus');
-      try {
-        const parsed = JSON.parse(input);
-        const formatted = JSON.stringify(parsed, null, 2);
-        document.getElementById('jsonOutput').value = formatted;
-        status.textContent = 'Válido ✓';
-        status.className = 'text-xs px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30';
-        updateJsonMeta(formatted, Object.keys(parsed).length);
-      } catch (err) {
-        document.getElementById('jsonOutput').value = 'Error de sintaxis:\n' + err.message;
-        status.textContent = 'Inválido ✗';
-        status.className = 'text-xs px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30';
-      }
-    }
+    // Trigger 2: Typing "dev" anywhere on the keyboard
+    let typedKeys = "";
+    window.addEventListener('keydown', (e) => {
+      // Ignore modifier keys
+      if (e.key.length === 1) {
+        typedKeys += e.key.toLowerCase();
+        if (typedKeys.length > 5) {
+          typedKeys = typedKeys.slice(-5);
+        }
 
-    function minifyJson() {
-      const input = document.getElementById('jsonInput').value;
-      try {
-        const minified = JSON.stringify(JSON.parse(input));
-        document.getElementById('jsonOutput').value = minified;
-      } catch (err) {
-        formatJson();
-      }
-    }
-
-    function loadSampleJson() {
-      const sample = {
-        app: "DevHub",
-        version: 1.0,
-        online: true,
-        features: ["JSON", "Base64", "Chmod", "Subnets"],
-        config: { port: 8080, env: "production" }
-      };
-      document.getElementById('jsonInput').value = JSON.stringify(sample);
-      formatJson();
-    }
-
-    function clearJson() {
-      document.getElementById('jsonInput').value = '';
-      document.getElementById('jsonOutput').value = '';
-      document.getElementById('jsonStatus').textContent = 'En espera';
-      document.getElementById('jsonStatus').className = 'text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400';
-      updateJsonMeta('', 0);
-    }
-
-    function updateJsonMeta(str, keys) {
-      const bytes = new Blob([str]).size;
-      document.getElementById('jsonMeta').innerHTML = `<span>Bytes: ${bytes}</span><span>Elementos raíz: ${keys}</span>`;
-    }
-
-    // Encoder / Decoder
-    function processTransform(type) {
-      const input = document.getElementById('encodeInput').value;
-      const out = document.getElementById('encodeOutput');
-      try {
-        if (type === 'b64-enc') out.value = btoa(unescape(encodeURIComponent(input)));
-        if (type === 'b64-dec') out.value = decodeURIComponent(escape(atob(input)));
-        if (type === 'url-enc') out.value = encodeURIComponent(input);
-        if (type === 'url-dec') out.value = decodeURIComponent(input);
-      } catch (e) {
-        out.value = "Error al procesar: " + e.message;
-      }
-    }
-
-    function swapEncoderTexts() {
-      const input = document.getElementById('encodeInput');
-      const out = document.getElementById('encodeOutput');
-      input.value = out.value;
-      out.value = '';
-    }
-
-    // Hash Generator
-    async function digestMessage(message, algo) {
-      if (!message) return '-';
-      const msgUint8 = new TextEncoder().encode(message);
-      const hashBuffer = await crypto.subtle.digest(algo, msgUint8);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    async function generateHashes() {
-      const val = document.getElementById('hashInput').value;
-      document.getElementById('sha256').innerText = await digestMessage(val, 'SHA-256');
-      document.getElementById('sha512').innerText = await digestMessage(val, 'SHA-512');
-      document.getElementById('sha1').innerText = await digestMessage(val, 'SHA-1');
-    }
-
-    function generateUUID() {
-      const uuid = crypto.randomUUID ? crypto.randomUUID() : 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
-      document.getElementById('uuidOutput').innerText = uuid;
-    }
-
-    // Chmod Calculator
-    function calcChmod() {
-      const u = (document.getElementById('u_r').checked ? 4 : 0) +
-                (document.getElementById('u_w').checked ? 2 : 0) +
-                (document.getElementById('u_x').checked ? 1 : 0);
-
-      const g = (document.getElementById('g_r').checked ? 4 : 0) +
-                (document.getElementById('g_w').checked ? 2 : 0) +
-                (document.getElementById('g_x').checked ? 1 : 0);
-
-      const o = (document.getElementById('o_r').checked ? 4 : 0) +
-                (document.getElementById('o_w').checked ? 2 : 0) +
-                (document.getElementById('o_x').checked ? 1 : 0);
-
-      const octal = `${u}${g}${o}`;
-      const toSym = (n) => (n & 4 ? 'r' : '-') + (n & 2 ? 'w' : '-') + (n & 1 ? 'x' : '-');
-      const symbolic = toSym(u) + toSym(g) + toSym(o);
-
-      document.getElementById('chmodOctal').innerText = octal;
-      document.getElementById('chmodSymbolic').innerText = symbolic;
-      document.getElementById('chmodCmd').innerText = `chmod ${octal} archivo.sh`;
-    }
-
-    // Subnet calculation
-    function calculateSubnet() {
-      const ip = document.getElementById('ipAddress').value.trim();
-      const cidr = parseInt(document.getElementById('cidrMask').value, 10);
-      
-      const ipParts = ip.split('.').map(Number);
-      if (ipParts.length !== 4 || ipParts.some(p => isNaN(p) || p < 0 || p > 255)) {
-        alert("Dirección IP inválida");
-        return;
+        if (typedKeys.endsWith("dev")) {
+          launchDevHub();
+        }
       }
 
-      const ipNum = (ipParts[0] << 24) | (ipParts[1] << 16) | (ipParts[2] << 8) | ipParts[3];
-      const mask = cidr === 0 ? 0 : (~0 << (32 - cidr));
-      const netNum = ipNum & mask;
-      const bcastNum = netNum | (~mask);
+      // Quick key combo: Ctrl + Shift + K
+      if (e.ctrlKey && e.shiftKey && (e.key === 'K' || e.key === 'k')) {
+        e.preventDefault();
+        launchDevHub();
+      }
+    });
 
-      const toIpStr = (num) => [
-        (num >>> 24) & 255,
-        (num >>> 16) & 255,
-        (num >>> 8) & 255,
-        num & 255
-      ].join('.');
+    // Portal launcher animation
+    function launchDevHub() {
+      document.body.classList.add('glitch-flash');
+      terminal.classList.remove('hidden');
 
-      const totalHosts = Math.pow(2, 32 - cidr);
-      const usableHosts = totalHosts > 2 ? totalHosts - 2 : 0;
+      setTimeout(() => {
+        progressBar.style.width = '100%';
+      }, 50);
 
-      document.getElementById('netId').innerText = toIpStr(netNum);
-      document.getElementById('netBroadcast').innerText = toIpStr(bcastNum);
-      document.getElementById('netHosts').innerText = usableHosts.toLocaleString();
-      document.getElementById('netRange').innerText = usableHosts > 0 
-        ? `${toIpStr(netNum + 1)} - ${toIpStr(bcastNum - 1)}` 
-        : 'Punto a punto / sin hosts';
+      setTimeout(() => {
+        window.location.href = "tools.html";
+      }, 850);
     }
-
-    // Global copy helpers
-    function copyToClipboard(id) {
-      const el = document.getElementById(id);
-      navigator.clipboard.writeText(el.value);
-    }
-    function copyRaw(text) {
-      navigator.clipboard.writeText(text);
-    }
-
-    // Live clock & timestamp
-    setInterval(() => {
-      const now = new Date();
-      document.getElementById('clock').innerText = now.toLocaleTimeString();
-      document.getElementById('unixTimestamp').innerText = Math.floor(now.getTime() / 1000);
-    }, 1000);
-
-    // Initial setup
-    calcChmod();
-    generateUUID();
-    generateHashes();
-    calculateSubnet();
   </script>
 </body>
 </html>
